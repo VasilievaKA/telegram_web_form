@@ -87,6 +87,7 @@
   <input id="goal-other" class="hidden" type="text" placeholder="Введите свой вариант" />
 
   <button id="send">Отправить заявку</button>
+  <div id="success">✅ Заявка отправлена!</div>
 
   <script>
     const tg = window.Telegram.WebApp;
@@ -134,8 +135,11 @@
         goal: goalValue
       };
 
-      tg.sendData(JSON.stringify(data));
-      tg.close();
+      tg.sendData(JSON.stringify(data)); 
+      successMsg.style.display = "block";
+      setTimeout(() => {
+        tg.close();
+      }, 1500);
     });
   </script>
 </body>
