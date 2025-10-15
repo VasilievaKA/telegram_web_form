@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Форма заявки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f5f5f5;
+        padding: 20px;
+      }
+      input, textarea {
+        width: 100%;
+        margin: 8px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+      button {
+        background: #2aabee;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 12px 16px;
+        width: 100%;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Оставьте заявку</h2>
+    <input id="name" placeholder="Ваше имя" />
+    <input id="phone" placeholder="Телефон" />
+    <textarea id="comment" placeholder="Комментарий"></textarea>
+    <button id="send">Отправить</button>
+
+    <script>
+      const tg = window.Telegram.WebApp;
+      tg.expand();
+
+      document.getElementById("send").addEventListener("click", () => {
+        const data = {
+          name: document.getElementById("name").value,
+          phone: document.getElementById("phone").value,
+          comment: document.getElementById("comment").value,
+        };
+
+        if (!data.name || !data.phone) {
+          alert("Пожалуйста, заполните имя и телефон");
+          return;
+        }
+
+        tg.sendData(JSON.stringify(data)); // Отправляем данные боту
+        tg.close();
+      });
+    </script>
+  </body>
+</html>
