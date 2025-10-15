@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Форма заявки</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f6f8fa;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      background: #2aabee;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Форма заявки</h2>
+
+  <label>Имя:</label>
+  <input id="name" type="text" placeholder="Введите имя" />
+
+  <label>Ник Telegram:</label>
+  <input id="nickname" type="text" placeholder="@username" value="@" />
+
+  <label>Класс:</label>
+  <select id="class">
+    <option value="" selected disabled>Выберите...</option>
+    <option>1–4 класс</option>
+    <option>5–8 класс</option>
+    <option>9–11 класс</option>
+    <option>Другое</option>
+  </select>
+  <input id="class-other" class="hidden" type="text" placeholder="Введите свой вариант" />
+
+  <label>Цель занятий:</label>
+  <select id="goal">
+    <option value="" selected disabled>Выберите...</option>
+    <option>Подготовка к школе</option>
+    <option>Другое</option>
+  </select>
+  <input id="goal-other" class="hidden" type="text" placeholder="Введите свою цель" />
+
+  <button id="send">Отправить заявку</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const classSelect = document.getElementById("class");
+    const classOther = document.getElementById("class-other");
+    const goalSelect = document.getElementById("goal");
+    const goalOther = document.getElementById("goal-other");
+
+    // Показать поле "Другое" при выборе соответствующего пункта
+    classSelect.addEventListener("change", () => {
+      if (classSelect.value === "Другое") {
+        classOther.classList.remove("hidden");
+      } else {
+        classOther.classList.add("hidden");
+        classOther.value = "";
+      }
+    });
+
+    goalSelect.addEventListener("change", () => {
+      if (goalSelect.value === "Другое") {
+        goalOther.classList.remove("hidden");
+      } else {
+        goalOther.classList.add("hidden");
+        goalOther.value = "";
+      }
+    });
+
+    document.getElementById("send").addEventListener("click", () => {
+      const name = document.getElementById("name").value.trim();
+      const nickname = document.getElementById("nickname").value.trim();
+      const classValue = classSelect.value === "Другое" ? classOther.value.trim() : classSelect.value;
+      const goalValue = goalSelect.value === "Другое" ? goalOther.value.trim() : goalSelect.value;
+
+      if (!name || !nickname) {
+        alert("Пожалуйста, заполните имя и ник Telegram.");
+        return;
+      }
+
+      const data = {
+        name,
+        nickname,
+        class: classValue,
+        goal: goalValue
+      };
+
+      tg.sendData(JSON.stringify(data));
+      tg.close();
+    });
+  </script>
+</body>
+</html>
